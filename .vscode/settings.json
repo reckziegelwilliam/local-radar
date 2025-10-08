@@ -1,0 +1,29 @@
+{
+  "cSpell.words": [
+    "Buzzy",
+    "supabase", 
+    "hyperlocal",
+    "PostGIS",
+    "RSVP",
+    "RSVPs",
+    "signup",
+    "signin",
+    "OAuth",
+    "Firebase",
+    "Firestore",
+    "geohash",
+    "geospatial",
+    "Poppins",
+    "LocalRadar",
+    "localradar",
+    "buzzy",
+    "microevents",
+    "popup",
+    "popups"
+  ],
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
