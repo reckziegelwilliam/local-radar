@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider } from '../src/hooks/useAuth';
 import { ErrorBoundary } from '../src/components/ErrorBoundary';
 import { DeepLinkHandler } from '../src/utils/deepLinking';
+import { ErrorTracking } from '../src/services/ErrorTrackingService';
 import { COLORS } from '../src/utils/constants';
 
 SplashScreen.preventAutoHideAsync();
@@ -17,6 +18,9 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    // Initialize error tracking
+    ErrorTracking.initialize();
+    
     // Initialize deep linking for magic link authentication
     const subscription = DeepLinkHandler.initialize();
     

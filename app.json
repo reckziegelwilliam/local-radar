@@ -111,6 +111,10 @@
         "projectId": "df50d7d9-741e-430f-964e-5b0b9fc1e8a0"
       }
     },
-    "owner": "liamrex"
+    "owner": "liamrex",
+    "primaryColor": "#FFC107",
+    "privacy": "public",
+    "privacyPolicyUrl": "https://yourdomain.com/privacy-policy",
+    "supportUrl": "mailto:support@yourdomain.com"
   }
 }
