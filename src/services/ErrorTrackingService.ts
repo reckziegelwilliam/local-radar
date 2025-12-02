@@ -1,17 +1,21 @@
 // Error Tracking Service
-// Abstraction layer for error tracking services (Sentry, Bugsnag, etc.)
+// Abstraction layer for error tracking with Sentry integration
 
-import { Platform } from 'react-native';
 import Constants from 'expo-constants';
+import * as Sentry from '@sentry/react-native';
 
-interface ErrorTrackingConfig {
+const isDevelopment = __DEV__;
+const isProduction = !__DEV__;
+
+export interface ErrorTrackingConfig {
+  enabled: boolean;
   dsn?: string;
-  enabled?: boolean;
   environment?: string;
-  release?: string;
+  sampleRate?: number;
+  tracesSampleRate?: number;
 }
 
-interface ErrorContext {
+export interface ErrorContext {
   [key: string]: any;
 }
 
@@ -23,59 +27,63 @@ interface UserInfo {
 
 class ErrorTrackingService {
   private isInitialized: boolean = false;
-  private config: ErrorTrackingConfig = {};
+  private config: ErrorTrackingConfig = {
+    enabled: false,
+  };
 
   /**
-   * Initialize error tracking service
+   * Initialize error tracking service with Sentry
    */
   initialize(config?: ErrorTrackingConfig): void {
-    // Get configuration from environment or passed config
-    const dsn = config?.dsn || process.env.EXPO_PUBLIC_SENTRY_DSN;
-    const enabled =
-      config?.enabled !== undefined
-        ? config.enabled
-        : process.env.EXPO_PUBLIC_SENTRY_ENABLED === 'true';
-    const environment =
-      config?.environment ||
-      process.env.EXPO_PUBLIC_APP_ENV ||
-      __DEV__ ? 'development' : 'production';
+    const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
+    const enabled = process.env.EXPO_PUBLIC_SENTRY_ENABLED === 'true';
+    const environment = process.env.EXPO_PUBLIC_APP_ENV || (isDevelopment ? 'development' : 'production');
 
-    // Don't initialize if disabled or no DSN provided
-    if (!enabled || !dsn) {
-      console.log('[ErrorTracking] Error tracking disabled or no DSN provided');
+    this.config = {
+      enabled: enabled && !!dsn && isProduction,
+      dsn,
+      environment,
+      sampleRate: 1.0,
+      tracesSampleRate: isProduction ? 1.0 : 0,
+      ...config,
+    };
+
+    if (!this.config.enabled || !this.config.dsn) {
+      if (isDevelopment) {
+        console.log('[ErrorTracking] Disabled - no DSN configured or not in production');
+      }
+      this.isInitialized = true;
       return;
     }
 
-    this.config = {
-      dsn,
-      enabled,
-      environment,
-      release: Constants.expoConfig?.version || '1.0.0',
-    };
+    try {
+      Sentry.init({
+        dsn: this.config.dsn,
+        environment: this.config.environment,
+        release: Constants.expoConfig?.version || '1.0.0',
+        enableInExpoDevelopment: false,
+        debug: isDevelopment,
+        sampleRate: this.config.sampleRate,
+        tracesSampleRate: this.config.tracesSampleRate,
+        integrations: [
+          new Sentry.ReactNativeTracing({
+            routingInstrumentation: new Sentry.RoutingInstrumentation(),
+          }),
+        ],
+        beforeSend(event, hint) {
+          // Filter out sensitive information
+          if (event.request) {
+            delete event.request.cookies;
+          }
+          return event;
+        },
+      });
 
-    // TODO: Initialize your error tracking service here
-    // Example for Sentry:
-    /*
-    import * as Sentry from '@sentry/react-native';
-    
-    Sentry.init({
-      dsn: this.config.dsn,
-      environment: this.config.environment,
-      release: this.config.release,
-      enableInExpoDevelopment: false,
-      debug: __DEV__,
-      integrations: [
-        new Sentry.ReactNativeTracing({
-          tracingOrigins: ['localhost', /^\//],
-          routingInstrumentation: new Sentry.ReactNavigationInstrumentation(),
-        }),
-      ],
-      tracesSampleRate: 1.0,
-    });
-    */
-
-    this.isInitialized = true;
-    console.log(`[ErrorTracking] Initialized for ${environment}`);
+      this.isInitialized = true;
+      console.log(`[ErrorTracking] Sentry initialized for ${environment}`);
+    } catch (error) {
+      console.error('[ErrorTracking] Failed to initialize Sentry:', error);
+    }
   }
 
   /**
@@ -83,28 +91,23 @@ class ErrorTrackingService {
    */
   captureException(error: Error, context?: ErrorContext): void {
     if (!this.isInitialized || !this.config.enabled) {
-      // Fallback to console in development
-      if (__DEV__) {
+      if (isDevelopment) {
         console.error('[ErrorTracking] Exception:', error, context);
       }
       return;
     }
 
-    // TODO: Send to your error tracking service
-    // Example for Sentry:
-    /*
-    import * as Sentry from '@sentry/react-native';
-    
-    if (context) {
-      Sentry.captureException(error, {
-        contexts: { custom: context },
-      });
-    } else {
-      Sentry.captureException(error);
+    try {
+      if (context) {
+        Sentry.captureException(error, {
+          contexts: { custom: context },
+        });
+      } else {
+        Sentry.captureException(error);
+      }
+    } catch (err) {
+      console.error('[ErrorTracking] Failed to capture exception:', err);
     }
-    */
-
-    console.log('[ErrorTracking] Captured exception:', error.message);
   }
 
   /**
@@ -116,24 +119,28 @@ class ErrorTrackingService {
     context?: ErrorContext
   ): void {
     if (!this.isInitialized || !this.config.enabled) {
-      if (__DEV__) {
+      if (isDevelopment) {
         console.log(`[ErrorTracking] Message (${level}):`, message, context);
       }
       return;
     }
 
-    // TODO: Send to your error tracking service
-    // Example for Sentry:
-    /*
-    import * as Sentry from '@sentry/react-native';
-    
-    Sentry.captureMessage(message, {
-      level: level === 'warning' ? 'warning' : level === 'error' ? 'error' : 'info',
-      contexts: context ? { custom: context } : undefined,
-    });
-    */
+    try {
+      const sentryLevel: Sentry.SeverityLevel = 
+        level === 'info' ? 'info' :
+        level === 'warning' ? 'warning' : 'error';
 
-    console.log(`[ErrorTracking] Captured message (${level}):`, message);
+      if (context) {
+        Sentry.captureMessage(message, {
+          level: sentryLevel,
+          contexts: { custom: context },
+        });
+      } else {
+        Sentry.captureMessage(message, sentryLevel);
+      }
+    } catch (err) {
+      console.error('[ErrorTracking] Failed to capture message:', err);
+    }
   }
 
   /**
@@ -144,87 +151,69 @@ class ErrorTrackingService {
       return;
     }
 
-    // TODO: Set user in your error tracking service
-    // Example for Sentry:
-    /*
-    import * as Sentry from '@sentry/react-native';
-    
-    if (user) {
-      Sentry.setUser({
-        id: user.id,
-        email: user.email,
-        username: user.username,
+    try {
+      if (user) {
+        Sentry.setUser({
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        });
+      } else {
+        Sentry.setUser(null);
+      }
+    } catch (error) {
+      console.error('[ErrorTracking] Failed to set user:', error);
+    }
+  }
+
+  /**
+   * Add breadcrumb for debugging context
+   */
+  addBreadcrumb(message: string, category?: string, data?: any): void {
+    if (!this.isInitialized || !this.config.enabled) {
+      return;
+    }
+
+    try {
+      Sentry.addBreadcrumb({
+        message,
+        category: category || 'general',
+        data,
+        level: 'info',
       });
-    } else {
-      Sentry.setUser(null);
-    }
-    */
-
-    console.log('[ErrorTracking] User context set:', user?.id || 'none');
-  }
-
-  /**
-   * Add breadcrumb for debugging
-   */
-  addBreadcrumb(
-    message: string,
-    category?: string,
-    data?: ErrorContext
-  ): void {
-    if (!this.isInitialized || !this.config.enabled) {
-      return;
-    }
-
-    // TODO: Add breadcrumb to your error tracking service
-    // Example for Sentry:
-    /*
-    import * as Sentry from '@sentry/react-native';
-    
-    Sentry.addBreadcrumb({
-      message,
-      category: category || 'custom',
-      data,
-      level: 'info',
-    });
-    */
-
-    if (__DEV__) {
-      console.log(`[ErrorTracking] Breadcrumb [${category}]:`, message);
+    } catch (error) {
+      console.error('[ErrorTracking] Failed to add breadcrumb:', error);
     }
   }
 
   /**
-   * Set custom context/tags
-   */
-  setContext(key: string, value: ErrorContext): void {
-    if (!this.isInitialized || !this.config.enabled) {
-      return;
-    }
-
-    // TODO: Set context in your error tracking service
-    // Example for Sentry:
-    /*
-    import * as Sentry from '@sentry/react-native';
-    
-    Sentry.setContext(key, value);
-    */
-  }
-
-  /**
-   * Set a tag
+   * Set custom tag
    */
   setTag(key: string, value: string): void {
     if (!this.isInitialized || !this.config.enabled) {
       return;
     }
 
-    // TODO: Set tag in your error tracking service
-    // Example for Sentry:
-    /*
-    import * as Sentry from '@sentry/react-native';
-    
-    Sentry.setTag(key, value);
-    */
+    try {
+      Sentry.setTag(key, value);
+    } catch (error) {
+      console.error('[ErrorTracking] Failed to set tag:', error);
+    }
+  }
+
+  /**
+   * Set custom context
+   */
+  setContext(key: string, context: any): void {
+    if (!this.isInitialized || !this.config.enabled) {
+      return;
+    }
+
+    try {
+      Sentry.setContext(key, context);
+    } catch (error) {
+      console.error('[ErrorTracking] Failed to set context:', error);
+    }
   }
 
   /**
@@ -252,4 +241,3 @@ export const captureMessage = (
 export const setUser = (user: UserInfo | null) => ErrorTracking.setUser(user);
 export const addBreadcrumb = (message: string, category?: string, data?: ErrorContext) =>
   ErrorTracking.addBreadcrumb(message, category, data);
-

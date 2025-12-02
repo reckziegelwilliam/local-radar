@@ -90,6 +90,17 @@ export default function SignIn() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
+        {/* Beta Welcome Banner */}
+        {isBeta && (
+          <View style={styles.betaBanner}>
+            <Text style={styles.betaBannerEmoji}>🧪</Text>
+            <Text style={styles.betaBannerTitle}>Thank you for beta testing Buzzy!</Text>
+            <Text style={styles.betaBannerText}>
+              Your feedback will help us improve. Shake your device anytime to report issues.
+            </Text>
+          </View>
+        )}
+
         <View style={styles.header}>
           <Text style={styles.title}>Buzzy</Text>
           <Text style={styles.subtitle}>
@@ -351,5 +362,32 @@ const styles = StyleSheet.create({
     color: COLORS.text.secondary,
     fontSize: TYPOGRAPHY.sizes.sm,
     fontFamily: 'Poppins',
+  },
+  betaBanner: {
+    backgroundColor: COLORS.primary + '20',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.xl,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.primary,
+    alignItems: 'center',
+  },
+  betaBannerEmoji: {
+    fontSize: 32,
+    marginBottom: SPACING.sm,
+  },
+  betaBannerTitle: {
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontFamily: 'Poppins-SemiBold',
+    color: COLORS.text.primary,
+    marginBottom: SPACING.xs,
+    textAlign: 'center',
+  },
+  betaBannerText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontFamily: 'Poppins',
+    color: COLORS.text.secondary,
+    textAlign: 'center',
+    lineHeight: 18,
   },
 });

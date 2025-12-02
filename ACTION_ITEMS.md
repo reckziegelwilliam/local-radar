@@ -1,7 +1,46 @@
 # Pre-Submission Checklist - Action Items
 
 **Created**: December 2, 2025  
-**Status**: Ready for review
+**Updated**: December 2, 2025 (Beta Features Added)  
+**Status**: Ready for beta testing
+
+---
+
+## 🧪 NEW: Beta Testing Setup
+
+### Beta Feedback System
+- ✅ Created beta_feedback database table (`supabase/migrations/002_add_beta_feedback.sql`)
+- ✅ In-app feedback form implemented
+- ✅ Shake-to-report feature added
+- ✅ Settings screen with app version and testing tools
+- ❌ **ACTION REQUIRED**: Run migration in Supabase:
+  ```sql
+  -- In Supabase SQL Editor, run:
+  -- supabase/migrations/002_add_beta_feedback.sql
+  ```
+
+### Crash Reporting (Sentry)
+- ✅ Sentry SDK integrated
+- ❌ **ACTION REQUIRED**: Set up Sentry account:
+  1. Sign up at https://sentry.io (free tier available)
+  2. Create new React Native project
+  3. Copy DSN to `.env`:
+     ```
+     EXPO_PUBLIC_SENTRY_DSN=https://your-dsn@sentry.io/project-id
+     EXPO_PUBLIC_SENTRY_ENABLED=true
+     ```
+
+### TestFlight & Play Store Beta
+- ❌ **ACTION REQUIRED**: Distribute beta builds:
+  ```bash
+  # iOS TestFlight
+  eas build --platform ios --profile preview
+  eas submit --platform ios --latest
+  
+  # Android Internal Testing
+  eas build --platform android --profile preview
+  eas submit --platform android --track internal --latest
+  ```
 
 ---
 

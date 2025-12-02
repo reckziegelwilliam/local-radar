@@ -15,6 +15,7 @@ import { supabase } from '../../src/services/supabase';
 import { Event } from '../../src/types';
 import { CATEGORIES, COLORS, TYPOGRAPHY, SPACING, RADIUS, REPORT_REASONS } from '../../src/utils/constants';
 import { LocationService } from '../../src/services/LocationService';
+import { logger } from '../../src/utils/logger';
 
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -53,7 +54,7 @@ export default function EventDetailScreen() {
       const eventData: Event = data[0];
       setEvent(eventData);
     } catch (error) {
-      console.error('Error fetching event:', error);
+      logger.error('Error fetching event:', error);
       Alert.alert('Error', 'Failed to load event details.');
       router.back();
     } finally {
@@ -96,7 +97,7 @@ export default function EventDetailScreen() {
       setIsRsvped(data.is_rsvped);
       setEvent(prev => prev ? { ...prev, rsvp_count: data.rsvp_count } : null);
     } catch (error) {
-      console.error('Error toggling RSVP:', error);
+      logger.error('Error toggling RSVP:', error);
       Alert.alert('Error', 'Failed to update RSVP. Please try again.');
     } finally {
       setRsvpLoading(false);
@@ -124,7 +125,7 @@ export default function EventDetailScreen() {
         [{ text: 'OK', onPress: () => setShowReportModal(false) }]
       );
     } catch (error: any) {
-      console.error('Error reporting event:', error);
+      logger.error('Error reporting event:', error);
       
       let errorMessage = 'Failed to submit report. Please try again.';
       if (error.message?.includes('duplicate')) {
@@ -146,7 +147,7 @@ export default function EventDetailScreen() {
         url: `localradar://event/${event.id}`,
       });
     } catch (error) {
-      console.error('Error sharing event:', error);
+      logger.error('Error sharing event:', error);
     }
   };
 

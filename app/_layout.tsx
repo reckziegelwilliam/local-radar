@@ -5,7 +5,9 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider } from '../src/hooks/useAuth';
 import { ErrorBoundary } from '../src/components/ErrorBoundary';
+import { OfflineBanner } from '../src/components/OfflineBanner';
 import { DeepLinkHandler } from '../src/utils/deepLinking';
+import { ShakeDetector } from '../src/utils/shakeDetector';
 import { ErrorTracking } from '../src/services/ErrorTrackingService';
 import { COLORS } from '../src/utils/constants';
 
@@ -24,8 +26,12 @@ export default function RootLayout() {
     // Initialize deep linking for magic link authentication
     const subscription = DeepLinkHandler.initialize();
     
+    // Initialize shake-to-report for beta
+    ShakeDetector.initialize();
+    
     return () => {
       subscription?.then(sub => sub?.remove());
+      ShakeDetector.cleanup();
     };
   }, []);
 
@@ -43,6 +49,7 @@ export default function RootLayout() {
   return (
     <ErrorBoundary>
       <AuthProvider>
+        <OfflineBanner />
         <StatusBar style="dark" backgroundColor={COLORS.background} />
         <Stack
         screenOptions={{
@@ -79,6 +86,25 @@ export default function RootLayout() {
         <Stack.Screen 
           name="event/[id]" 
           options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="feedback" 
+          options={{ 
+            title: 'Beta Feedback',
+            presentation: 'modal',
+            headerStyle: {
+              backgroundColor: COLORS.surface,
+            },
+          }} 
+        />
+        <Stack.Screen 
+          name="settings" 
+          options={{ 
+            title: 'Settings',
+            headerStyle: {
+              backgroundColor: COLORS.background,
+            },
+          }} 
         />
       </Stack>
       </AuthProvider>

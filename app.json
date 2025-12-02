@@ -109,7 +109,9 @@
       },
       "eas": {
         "projectId": "df50d7d9-741e-430f-964e-5b0b9fc1e8a0"
-      }
+      },
+      "isBeta": true,
+      "betaVersion": "1.0.0-beta.1"
     },
     "owner": "liamrex",
     "primaryColor": "#FFC107",
