@@ -30,7 +30,7 @@ export class DeepLinkHandler {
       if (url.includes('localhost') && (url.includes('access_token=') || url.includes('refresh_token='))) {
         console.log('⚠️ Detected localhost URL from Supabase built-in email service');
         // Convert localhost URL to proper app scheme for processing
-        const convertedUrl = url.replace(/https?:\/\/localhost(:\d+)?/, 'localradar://');
+        const convertedUrl = url.replace(/https?:\/\/localhost(:\d+)?/, 'buzzy://');
         console.log('🔄 Converting to:', convertedUrl);
         await this.handleAuthCallback(convertedUrl);
         return;

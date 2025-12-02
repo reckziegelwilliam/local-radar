@@ -61,14 +61,14 @@ class ErrorTrackingService {
         dsn: this.config.dsn,
         environment: this.config.environment,
         release: Constants.expoConfig?.version || '1.0.0',
-        enableInExpoDevelopment: false,
+        // enableInExpoDevelopment: false,
         debug: isDevelopment,
         sampleRate: this.config.sampleRate,
         tracesSampleRate: this.config.tracesSampleRate,
         integrations: [
-          new Sentry.ReactNativeTracing({
-            routingInstrumentation: new Sentry.RoutingInstrumentation(),
-          }),
+          // new Sentry.ReactNativeTracing({
+          //   routingInstrumentation: new Sentry.RoutingInstrumentation(),
+          // }),
         ],
         beforeSend(event, hint) {
           // Filter out sensitive information

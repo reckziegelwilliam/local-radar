@@ -98,13 +98,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string) => {
-    logger.log('📧 Sending magic link via SendGrid with redirect: localradar://');
+    logger.log('📧 Sending magic link via SendGrid with redirect: buzzy://');
     
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
-        emailRedirectTo: 'localradar://',
+        emailRedirectTo: 'buzzy://',
       },
     });
 
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.error('Error details:', error.message);
     } else {
       logger.log('✅ Magic link sent via SendGrid - check your email!');
-      logger.log('🔗 Email should contain localradar:// redirect URL');
+      logger.log('🔗 Email should contain buzzy:// redirect URL');
     }
 
     return { error };
