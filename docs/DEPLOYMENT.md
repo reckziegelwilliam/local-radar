@@ -314,7 +314,7 @@ Before submitting to production:
 2. Create new app:
    - Platform: iOS
    - Name: Buzzy
-   - Bundle ID: `com.localradar.app`
+   - Bundle ID: `com.buzzy.app`
    - SKU: `buzzy-ios`
    - Primary Language: English
 3. Fill in app information:

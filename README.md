@@ -2,6 +2,8 @@
 
 Buzzy is a hyperlocal micro-events app that helps you discover and create spontaneous events happening right around you.
 
+📚 **[Complete Documentation Index →](DOCUMENTATION_INDEX.md)**
+
 ## Features
 
 - **Real-time Map**: See nearby events on an interactive map within 5km radius
@@ -42,7 +44,7 @@ Buzzy is a hyperlocal micro-events app that helps you discover and create sponta
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd local-radar
+   cd buzzy
    ```
 
 2. **Install dependencies**
@@ -169,13 +171,13 @@ app/
 ## App Store Readiness
 
 ### iOS
-- Bundle identifier: `com.localradar.app`
+- Bundle identifier: `com.buzzy.app`
 - Required permissions: Location, Camera, Photo Library
 - Push notification certificates configured
 - Privacy policy included
 
 ### Android
-- Package name: `com.localradar.app`
+- Package name: `com.buzzy.app`
 - Required permissions defined in app.json
 - Adaptive icon configured
 - Edge-to-edge display support
@@ -205,6 +207,20 @@ app/
 
 This project is licensed under the MIT License.
 
+## Documentation
+
+For comprehensive documentation, see [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md):
+
+- **Getting Started**: [START_HERE.md](START_HERE.md)
+- **Project Status**: [PROJECT_STATUS.md](PROJECT_STATUS.md)
+- **Future Plans**: [FUTURE_ROADMAP.md](FUTURE_ROADMAP.md)
+- **Architecture**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- **API Reference**: [docs/API_REFERENCE.md](docs/API_REFERENCE.md)
+- **Contributing**: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
+
 ## Support
 
-For support or questions, please open an issue on GitHub.
+For support or questions:
+- Check [docs/FAQ.md](docs/FAQ.md) for common questions
+- Review [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for issues
+- Open an issue on GitHub

@@ -10,8 +10,8 @@ Buzzy uses deep linking for magic link authentication. This guide explains how t
 
 The app supports two URL schemes:
 
-1. **Custom Scheme**: `localradar://`
-2. **Universal Links**: `https://localradar.app` (when domain is configured)
+1. **Custom Scheme**: `buzzy://`
+2. **Universal Links**: `https://buzzy.app` (when domain is configured)
 
 ### Configuration Files
 
@@ -19,8 +19,8 @@ The app supports two URL schemes:
   ```json
   "linking": {
     "prefixes": [
-      "localradar://",
-      "https://localradar.app"
+      "buzzy://",
+      "https://buzzy.app"
     ]
   }
   ```
@@ -39,7 +39,7 @@ The app supports two URL schemes:
 ### Step 2: Configure Email Template
 
 1. Go to Authentication → Email Templates → Magic Link
-2. Verify the template contains the redirect URL: `localradar://`
+2. Verify the template contains the redirect URL: `buzzy://`
 3. The link should look like: `{{ .ConfirmationURL }}`
 
 ### Step 3: Test on iOS Simulator
@@ -58,13 +58,13 @@ npm run ios
 
 # 4. Get the magic link URL from email
 # It will look like:
-# https://YOUR-PROJECT.supabase.co/auth/v1/verify?token=...&type=magiclink&redirect_to=localradar://
+# https://YOUR-PROJECT.supabase.co/auth/v1/verify?token=...&type=magiclink&redirect_to=buzzy://
 
 # 5. Test the deep link in simulator
-xcrun simctl openurl booted "localradar://"
+xcrun simctl openurl booted "buzzy://"
 
 # Or with the full magic link URL:
-xcrun simctl openurl booted "https://YOUR-PROJECT.supabase.co/auth/v1/verify?token=...&type=magiclink&redirect_to=localradar://"
+xcrun simctl openurl booted "https://YOUR-PROJECT.supabase.co/auth/v1/verify?token=...&type=magiclink&redirect_to=buzzy://"
 ```
 
 #### Using Physical iOS Device
@@ -94,10 +94,10 @@ npm run android
 # 2. Trigger magic link sign-in
 
 # 3. Test deep link using adb
-adb shell am start -W -a android.intent.action.VIEW -d "localradar://" com.localradar.app
+adb shell am start -W -a android.intent.action.VIEW -d "buzzy://" com.buzzy.app
 
 # Or with full magic link:
-adb shell am start -W -a android.intent.action.VIEW -d "https://YOUR-PROJECT.supabase.co/auth/v1/verify?token=...&type=magiclink&redirect_to=localradar://" com.localradar.app
+adb shell am start -W -a android.intent.action.VIEW -d "https://YOUR-PROJECT.supabase.co/auth/v1/verify?token=...&type=magiclink&redirect_to=buzzy://" com.buzzy.app
 ```
 
 #### Using Physical Android Device
@@ -113,7 +113,7 @@ eas build --profile development --platform android
 # Choose "Open with Buzzy" when prompted
 
 # 4. Alternative: Test via Chrome
-# Navigate to: localradar://
+# Navigate to: buzzy://
 # Or paste the full magic link URL
 ```
 
@@ -216,7 +216,7 @@ useEffect(() => {
 
 ### Pre-Test Setup
 - [ ] Supabase email provider enabled
-- [ ] Email template configured with `localradar://` redirect
+- [ ] Email template configured with `buzzy://` redirect
 - [ ] App installed on test device/simulator
 - [ ] Deep link handler initialized in app
 
@@ -250,22 +250,22 @@ useEffect(() => {
 
 1. Configure Associated Domains in Xcode
 2. Add `apple-app-site-association` file to your domain
-3. Test with: `https://localradar.app/auth/callback?token=...`
+3. Test with: `https://buzzy.app/auth/callback?token=...`
 
 ### Test App Links (Android)
 
 1. Configure intent filters in `app.json`
 2. Add `assetlinks.json` to your domain
-3. Test with: `https://localradar.app/auth/callback?token=...`
+3. Test with: `https://buzzy.app/auth/callback?token=...`
 
 ### Test Deep Link Routing
 
 ```bash
 # Test different routes
-localradar://                    # Home/Map screen
-localradar://event/123          # Specific event
-localradar://create             # Create event screen
-localradar://auth/sign-in       # Sign in screen
+buzzy://                    # Home/Map screen
+buzzy://event/123          # Specific event
+buzzy://create             # Create event screen
+buzzy://auth/sign-in       # Sign in screen
 ```
 
 ## Automated Testing
@@ -279,7 +279,7 @@ import { DeepLinkHandler } from '../src/utils/deepLinking';
 
 describe('Deep Linking', () => {
   it('should handle magic link URLs', async () => {
-    const url = 'localradar://auth/callback?token=abc123';
+    const url = 'buzzy://auth/callback?token=abc123';
     // ... test implementation
   });
 });
@@ -339,7 +339,7 @@ If deep linking isn't working:
 
 1. Check logs for error messages
 2. Verify URL scheme configuration
-3. Test with simple URL first: `localradar://`
+3. Test with simple URL first: `buzzy://`
 4. Ensure app is properly installed
 5. Check Supabase auth logs
 6. Contact support: support@yourdomain.com
