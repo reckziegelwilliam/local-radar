@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext, ReactNode } from
 import { Session, User, AuthError } from '@supabase/supabase-js';
 import { supabase } from '../services/supabase';
 import { Profile } from '../types';
+import { logger } from '../utils/logger';
 
 interface AuthContextType {
   user: User | null;
@@ -66,13 +67,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Profile doesn't exist, create it
           await createProfile(userId);
         } else {
-          console.error('Error fetching profile:', error);
+          logger.error('Error fetching profile:', error);
         }
       } else {
         setProfile(data);
       }
     } catch (error) {
-      console.error('Error in fetchProfile:', error);
+      logger.error('Error in fetchProfile:', error);
     } finally {
       setLoading(false);
     }
@@ -87,17 +88,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .single();
 
       if (error) {
-        console.error('Error creating profile:', error);
+        logger.error('Error creating profile:', error);
       } else {
         setProfile(data);
       }
     } catch (error) {
-      console.error('Error in createProfile:', error);
+      logger.error('Error in createProfile:', error);
     }
   };
 
   const signIn = async (email: string) => {
-    console.log('📧 Sending magic link via SendGrid with redirect: localradar://');
+    logger.log('📧 Sending magic link via SendGrid with redirect: localradar://');
     
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -108,18 +109,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      console.error('❌ Magic link error:', error);
-      console.error('Error details:', error.message);
+      logger.error('❌ Magic link error:', error);
+      logger.error('Error details:', error.message);
     } else {
-      console.log('✅ Magic link sent via SendGrid - check your email!');
-      console.log('🔗 Email should contain localradar:// redirect URL');
+      logger.log('✅ Magic link sent via SendGrid - check your email!');
+      logger.log('🔗 Email should contain localradar:// redirect URL');
     }
 
     return { error };
   };
 
   const signInWithPassword = async (email: string, password: string) => {
-    console.log('🔑 Signing in with password for development...');
+    logger.log('🔑 Signing in with password for development...');
     
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -127,16 +128,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      console.error('❌ Password sign-in error:', error);
+      logger.error('❌ Password sign-in error:', error);
     } else {
-      console.log('✅ Password sign-in successful!');
+      logger.log('✅ Password sign-in successful!');
     }
 
     return { error };
   };
 
   const signUpWithPassword = async (email: string, password: string) => {
-    console.log('📝 Creating account with password...');
+    logger.log('📝 Creating account with password...');
     
     const { error } = await supabase.auth.signUp({
       email,
@@ -144,9 +145,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      console.error('❌ Password sign-up error:', error);
+      logger.error('❌ Password sign-up error:', error);
     } else {
-      console.log('✅ Account created successfully!');
+      logger.log('✅ Account created successfully!');
     }
 
     return { error };
