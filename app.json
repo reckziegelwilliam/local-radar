@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Buzzy",
-    "slug": "buzzy",
-    "scheme": "localradar",
+    "slug": "buzzy-lqqzdizkpxeecvutwvnr",
+    "scheme": "buzzy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/brand/icon.png",
@@ -19,7 +19,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.localradar.app",
+      "bundleIdentifier": "com.buzzy.app",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Buzzy needs location access to show nearby events and help you create events at your current location.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Buzzy needs location access to show nearby events and help you create events at your current location.",
@@ -33,7 +33,7 @@
         "foregroundImage": "./assets/brand/adaptive-icon-foreground.png",
         "backgroundImage": "./assets/brand/adaptive-icon-background.png"
       },
-      "package": "com.localradar.app",
+      "package": "com.buzzy.app",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "permissions": [
@@ -82,8 +82,8 @@
     ],
     "linking": {
       "prefixes": [
-        "localradar://",
-        "https://localradar.app"
+        "buzzy://",
+        "https://buzzy.app"
       ],
       "config": {
         "screens": {
@@ -108,7 +108,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "df50d7d9-741e-430f-964e-5b0b9fc1e8a0"
+        "projectId": "89a9eeea-7c90-4a29-9935-74892ae68e6e"
       },
       "isBeta": true,
       "betaVersion": "1.0.0-beta.1"

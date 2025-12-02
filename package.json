@@ -83,10 +83,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourname/buzzy.git"
+    "url": "https://github.com/liamrex/buzzy.git"
   },
   "bugs": {
-    "url": "https://github.com/yourname/buzzy/issues"
+    "url": "https://github.com/liamrex/buzzy/issues"
   },
   "homepage": "https://buzzy.app",
   "private": false
