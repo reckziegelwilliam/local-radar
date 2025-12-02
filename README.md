@@ -82,14 +82,19 @@ Buzzy is a hyperlocal micro-events app that helps you discover and create sponta
      ```
 
 4. **Configure environment**
+   
+   Copy the environment template and fill in your Supabase credentials:
    ```bash
    cp .env.example .env
    ```
-   Fill in your Supabase credentials:
-   ```
+   
+   Then edit `.env` with your Supabase project details:
+   ```bash
    EXPO_PUBLIC_SUPABASE_URL=your_supabase_project_url
    EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
+   
+   Get these values from: Supabase Dashboard → Project Settings → API
 
 5. **Start the development server**
    ```bash

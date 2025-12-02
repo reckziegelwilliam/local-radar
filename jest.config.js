@@ -20,5 +20,13 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  testEnvironment: 'node',
+  // Skip React Native's problematic setup file
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react'
+      }
+    }
+  }
 };
-
