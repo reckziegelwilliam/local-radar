@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS } from '../utils/constants';
+import { ErrorTracking } from '../services/ErrorTrackingService';
 
 interface Props {
   children: ReactNode;
@@ -23,7 +24,15 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: any) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Log to error tracking service
+    ErrorTracking.captureException(error, {
+      errorInfo: errorInfo,
+      componentStack: errorInfo.componentStack,
+    });
+    
+    if (__DEV__) {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
   }
 
   handleRetry = () => {
