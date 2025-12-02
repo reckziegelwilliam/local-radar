@@ -144,7 +144,7 @@ export default function EventDetailScreen() {
     try {
       await Share.share({
         message: `Check out this event on Buzzy: ${event.title}`,
-        url: `localradar://event/${event.id}`,
+        url: `buzzy://event/${event.id}`,
       });
     } catch (error) {
       logger.error('Error sharing event:', error);

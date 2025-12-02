@@ -12,6 +12,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/hooks/useAuth';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS } from '../../src/utils/constants';
+import Constants from 'expo-constants';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -91,7 +92,7 @@ export default function SignIn() {
     >
       <View style={styles.content}>
         {/* Beta Welcome Banner */}
-        {isBeta && (
+        {Constants.expoConfig?.extra?.isBeta === true && (
           <View style={styles.betaBanner}>
             <Text style={styles.betaBannerEmoji}>🧪</Text>
             <Text style={styles.betaBannerTitle}>Thank you for beta testing Buzzy!</Text>
