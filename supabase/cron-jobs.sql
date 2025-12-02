@@ -4,6 +4,10 @@
 -- Create the cron job to run cleanup every hour
 -- Note: This requires Supabase Pro plan or higher for cron functionality
 
+-- TODO: Update the URL below to match your Supabase project URL
+-- Replace 'immjhwxgisuoxzwkxvnz' with your actual project ref
+-- Find your project ref at: https://supabase.com/dashboard/project/YOUR_PROJECT/settings/general
+
 select cron.schedule(
   'cleanup-expired-events',
   '0 * * * *', -- Run every hour at minute 0
