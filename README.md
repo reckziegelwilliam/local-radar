@@ -70,9 +70,15 @@ Buzzy is a hyperlocal micro-events app that helps you discover and create sponta
      supabase functions deploy cleanup-expired-events
      supabase functions deploy send-nearby-notification
      ```
+   - Set up Storage Bucket for event photos:
+     ```bash
+     # Execute supabase/storage-policies.sql in Supabase SQL Editor
+     # Or manually create bucket named 'event-photos' with public read access
+     ```
    - Set up cron jobs (requires Supabase Pro):
      ```bash
      # Execute supabase/cron-jobs.sql
+     # Note: Update the hardcoded URL to match your project
      ```
 
 4. **Configure environment**
