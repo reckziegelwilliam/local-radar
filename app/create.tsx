@@ -22,6 +22,7 @@ import { validateEventTitle, validateEventTimes, validateCategory } from '../src
 import { checkProfanity } from '../src/utils/profanity';
 import { CategoryId, CreateEventData } from '../src/types';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, EVENT_CONFIG } from '../src/utils/constants';
+import { logger } from '../src/utils/logger';
 
 export default function CreateEventScreen() {
   const { user } = useAuth();
@@ -70,7 +71,7 @@ export default function CreateEventScreen() {
         setPhoto(result.assets[0].uri);
       }
     } catch (error) {
-      console.error('Error picking image:', error);
+      logger.error('Error picking image:', error);
       Alert.alert('Error', 'Failed to select image. Please try again.');
     }
   };
@@ -105,7 +106,7 @@ export default function CreateEventScreen() {
 
       return data.publicUrl;
     } catch (error) {
-      console.error('Error uploading image:', error);
+      logger.error('Error uploading image:', error);
       
       // Retry logic
       if (retryCount < 2) {
@@ -212,10 +213,10 @@ export default function CreateEventScreen() {
             event_lng: location.longitude,
           },
         });
-        console.log('Nearby user notifications sent');
+        logger.log('Nearby user notifications sent');
       } catch (notifError) {
         // Don't fail event creation if notifications fail
-        console.log('Notification trigger failed (non-critical):', notifError);
+        logger.log('Notification trigger failed (non-critical):', notifError);
       }
 
       Alert.alert(
@@ -229,7 +230,7 @@ export default function CreateEventScreen() {
         ]
       );
     } catch (error: any) {
-      console.error('Error creating event:', error);
+      logger.error('Error creating event:', error);
       
       let errorMessage = 'Failed to create event. Please try again.';
       if (error.message?.includes('Rate limit')) {
